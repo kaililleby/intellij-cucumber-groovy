@@ -1,0 +1,44 @@
+plugins {
+    id 'groovy'
+    id 'idea'
+}
+
+wrapper.gradleVersion = '7.6'
+
+tasks.named('wrapper') {
+    distributionType = Wrapper.DistributionType.ALL
+}
+
+repositories {
+    mavenCentral()
+}
+
+idea {
+    module {
+        outputDir file('build/classes/main')
+        testOutputDir file('build/classes/test')
+    }
+}
+
+dependencies {
+    testImplementation 'org.codehaus.groovy:groovy:3.0.10'
+    testImplementation 'org.codehaus.groovy:groovy-json:3.0.10'
+
+    testImplementation('io.cucumber:cucumber-groovy:6.10.4'){ because 'groovy wrapper av cucumber '}
+    testImplementation('io.cucumber:cucumber-junit-platform-engine:7.8.1'){ because 'kjøring av cucumber-tester via junit'}
+    testImplementation('org.junit.platform:junit-platform-suite:1.9.0'){ because 'kjøring av cucumber-tester via junit'}
+
+
+    testImplementation('org.slf4j:jcl-over-slf4j:1.7.36') { because 'sørger for at logging via javas eget rammeverk redirigeres til slf4j' }
+    testImplementation('org.slf4j:log4j-over-slf4j:1.7.36') { because 'erstatning for log4j 1 slik at biblioteker som benytter log4j 1 kan brukes og dere logmeldinger vil bli levert til slf4j.' }
+    testImplementation('org.apache.logging.log4j:log4j-to-slf4j:2.17.0') { because 'sørger for at log4j 2.x bruker slf4j (logback) som backend.' }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams true
+    }
+    systemProperty('cucumber.plugin', 'pretty')
+    systemProperty('cucumber.publish.quiet', 'true')
+}
