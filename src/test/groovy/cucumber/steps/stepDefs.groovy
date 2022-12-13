@@ -6,5 +6,9 @@ import io.cucumber.groovy.EN
 this.metaClass.mixin(EN)
 
 Given('i write {string} to console') { String verdi ->
-    println "write $verdi to console"
+    println "i write $verdi to console"
+}
+
+Given(~'^you write "(.*)" to console$') { String verdi ->
+    println "you write $verdi to console"
 }
